@@ -1,6 +1,5 @@
 // import { Mongoose,Mongoose,Schema,Types,Model } from "mongoose";
-import mongoose from 'mongoose';
-import {trend,twitterResponse} from './interfaces';
+import mongoose = require("mongoose");
 
 let trendSchema = new mongoose.Schema({
     name : String,
@@ -20,7 +19,6 @@ let responseSchema = new mongoose.Schema({
     as_of : Date,
     created_at : Date,
     locations: [locationSchema]
-
 })
 
 export let trendModel = mongoose.model('trends',responseSchema);

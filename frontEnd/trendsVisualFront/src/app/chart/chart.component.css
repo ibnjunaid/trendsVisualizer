@@ -1,0 +1,7 @@
+svg {
+  background-color: #6b332f;
+}
+svg rect {
+  fill: #2f676b;
+  border-radius: 10px;
+}

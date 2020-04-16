@@ -1,11 +1,19 @@
-<div style="display: block;">
-  <canvas baseChart width="400" height="400"
-    [datasets]="lineChartData"
-    [labels]="lineChartLabels"
-    [options]="lineChartOptions"
-    [colors]="lineChartColors"
-    [legend]="lineChartLegend"
-    [chartType]="lineChartType"
-    [plugins]="lineChartPlugins">
-  </canvas>
+<mat-toolbar color=secondary id="app-id">
+    <button mat-button id="home">HOME</button>
+    <span id="named-icon">
+      <mat-icon id="icon">insert_chart</mat-icon>
+      <span id="name">TrendsVisualizer</span>
+    </span>
+    <button mat-button id="trends">TRENDS</button>
+    <button mat-button id="history">HISTORY</button>
+</mat-toolbar>
+
+<div class="router">
+  <router-outlet>
+    
+  </router-outlet>
 </div>
+
+<app-chart>
+  
+</app-chart>

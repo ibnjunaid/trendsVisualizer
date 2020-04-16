@@ -21,6 +21,7 @@ export interface twitterResponse{
 //Server Interfaces 
 
 export interface Trend{
+    index :number,
     name : String,
     tweet_volume : number
 }

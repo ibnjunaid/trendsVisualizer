@@ -1,7 +1,10 @@
 import express from 'express';
 import { MongoClient } from 'mongodb';
+import * as path from 'path';
 import { frontEndResponse,Trend ,twitterResponse,trend} from './interfaces';
 import { parseDbData,erLog } from './utils'
+const cors = require('cors');
+
 
 //URI  DB Setup and create Mongo Client 
 const URI = "mongodb://127.0.0.1:27017";
@@ -28,12 +31,19 @@ let dataToSend = Array<frontEndResponse>();
 //Serve data 
 
 function serve() {
+
     const app = express();
-    app.get('/data', (req, res) => {
+
+    app.use('/static', express.static(path.join(__dirname, 'public')))
+
+    app.get('/data', cors(),(req, res) => {
         res.send(JSON.stringify(dataToSend));
     });
     app.get('/loc/:woeid', (req, res) => {
         res.send("Specific City based Search under construction");
     });
+    app.get('/debug',(req,res)=>{
+
+    })
     app.listen(8080, () => console.log('\nListening on http://localhost:8080'));
 }

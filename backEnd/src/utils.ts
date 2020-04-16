@@ -7,8 +7,9 @@ import {twitterResponse,frontEndResponse,trend,Trend,location} from './interface
 
 
 function parseTrends( data:Array<trend> ){
-    return data.map( d => { 
+    return data.map( (d,i) => { 
         let trend : Trend = {
+            index :i,
             name : d.name,
             tweet_volume : d.tweet_volume
         }

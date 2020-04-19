@@ -1,7 +1,11 @@
 svg {
-  background-color: #6b332f;
+  background-color: whitesmoke;
+  margin: 10px;
 }
-svg rect {
-  fill: #2f676b;
+rect.bar {
+  fill: dodgerblue;
   border-radius: 10px;
+}
+.tick {
+  fill: white;
 }

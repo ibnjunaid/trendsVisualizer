@@ -1,7 +1,11 @@
 svg{
-    background-color: complement($color: rgb(47, 103, 107));
+    background-color:whitesmoke;
+    margin:10px;
 }
-svg rect{
-    fill:rgb(47, 103, 107);
+rect.bar{
+    fill:dodgerblue;
     border-radius: 10px;
+}
+.tick{
+    fill:white;
 }

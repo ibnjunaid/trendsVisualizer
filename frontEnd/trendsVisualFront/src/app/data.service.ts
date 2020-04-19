@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {serverResponse} from 'src/interfaces/interfaces';
+import { serverResponse } from 'src/interfaces/interfaces';
+import * as d3 from 'd3';
 
 @Injectable({
   providedIn: 'root'

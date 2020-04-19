@@ -30,3 +30,8 @@
   justify-self: start;
   color: grey;
 }
+#footer {
+  position: absolute;
+  top: 100%;
+  bottom: 0;
+}

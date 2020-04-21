@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { DataService } from '../data.service';
 import { serverResponse, Trend } from '../../interfaces/interfaces';
 import * as d3 from 'd3';
-import { style } from '@angular/animations';
-
+import { sliderHorizontal } from './../../..//node_modules/d3-simple-slider/dist/d3-simple-slider.js';
 @Component({
   selector: 'app-chart',
   templateUrl: './chart.component.html',
@@ -11,30 +10,34 @@ import { style } from '@angular/animations';
 })
 export class ChartComponent implements OnInit {
 
+
+  constructor(private dataService: DataService) {
+  }
+
+  // * ngModel variables
+  @Input() selectedTime = '5 am';
+
+
   margin = { top: 40, bottom: 40, right: 60, left: 80};
   svgHeight = 500 - this.margin.top - this.margin.bottom;
   svgWidth = 800 - this.margin.left - this.margin.right;
 
-  constructor(private dataService: DataService) {
-    this.draw();
-  }
+
+  // * Helper Functions
 
   // convert dateString to javascript date
   parseDate = (date: string) => new Date(date);
-
   // format Ticks
   formatTicks = (d: any) =>  d3.format('~s')(d);
 
-  // * currently acting as entry function fetches and parses data 
+  // * currently acting as entry function fetches and parses data
   //  * then passes to drawBars
   draw(): void {
     this.dataService.getData().subscribe((data: Array<serverResponse>) => {
-      data.forEach((d) => {
-        d.as_of = this.parseDate(d.as_of);
-      });
-      this.drawBars(data[26].trends);
-      console.log(data);
+      data.forEach((d) => d.as_of = this.parseDate(d.as_of));
+      this.genSlider(data);
     });
+    debugger;
   }
 
   // Draw
@@ -49,12 +52,21 @@ export class ChartComponent implements OnInit {
                       .domain(data.map((d) => String(d.index)))
                       .rangeRound([0, this.svgWidth])
                       .paddingInner(0.25);
+
     const yScale = d3.scaleLinear()
                       .domain([0 , yExtent[1]])
                       .range([this.svgHeight, 0]);
     const svg = d3.select('svg')
                   .attr('height', this.svgHeight + this.margin.top + this.margin.bottom)
                   .attr('width', this.svgWidth + this.margin.left + this.margin.right);
+    svg.selectAll('*').remove();
+
+    if (data.length === 0 ) {
+      svg.append('text')
+          .text('Data Not Available Right Now!!')
+          .attr('transform', `translate(20,20)`);
+    }
+
     svg
        .append('g')
        .classed('bar-container', true)
@@ -89,7 +101,7 @@ export class ChartComponent implements OnInit {
   }
 
   listeners() {
-    const Detailsvg = this.initializeBarDetailContainer();
+    const Detailsvg = this.initializeSVGContainer(350, 500, '.bar-detail-container');
     d3.selectAll('.bar')
       .on('click', (bar: Trend) => {
         console.log(bar);
@@ -97,10 +109,8 @@ export class ChartComponent implements OnInit {
       });
   }
 
-  initializeBarDetailContainer() {
-    const containerHeight = 500;
-    const containerWidth = 350;
-    return d3.select('.bar-detail-container')
+  initializeSVGContainer(containerWidth: number, containerHeight: number , selector: string) {
+    return d3.select(selector)
       .attr('height', containerHeight)
       .attr('width', containerWidth);
   }
@@ -114,16 +124,49 @@ export class ChartComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.draw();
   }
 
+  genSlider(data: Array<serverResponse>) {
+    console.log(data);
+    const svgWidth = window.innerWidth;
+    const svgHeight = 100;
+    const sliderWidth = svgWidth;
+
+    const slider = sliderHorizontal()
+    .min(0)
+    .max(24)
+    .step(1)
+    .width(sliderWidth - 50)
+    .tickFormat(this.formatTimeSlider)
+    .ticks(24)
+    .displayValue(true)
+    .on('onchange', (val: number) => {
+        const match = data.filter((d) => d.as_of.getHours() === val );
+        console.log(match);
+        if ( match.length !== 0) {
+          this.drawBars(match[0].trends);
+        } else {
+          this.drawBars([]);
+        }
+      });
+
+    d3.select('#slider')
+    .append('svg')
+    .attr('width', svgWidth)
+    .attr('height', svgHeight)
+    .append('g')
+    .attr('transform', 'translate(30,30)')
+    .call(slider);
+  }
+
+
+
   // format Time Slider
-    formatTimeSlider(value: number) {
+    formatTimeSlider(value: number): string {
       const amORpm = value > 12 ? ' pm' : ' am';
-      const hr = (value % 12) || 12;
-      console.log(hr);
-      const min = hr - (value / 24);
-      console.log(min);
-      return (hr + min) + amORpm;
+      const hr = Math.round(value % 12) || 12;
+      return hr + amORpm;
     }
 
 }

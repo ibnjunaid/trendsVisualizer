@@ -7,3 +7,10 @@ body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+#slider > svg > g > g.slider > g > path {
+  fill: greenyellow;
+}
+#slider > svg > g > g.slider > g > path :focus {
+  outline: none;
+  fill: mediumseagreen;
+}

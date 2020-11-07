@@ -7,9 +7,9 @@ const cors = require('cors');
 
 
 //URI  DB Setup and create Mongo Client 
-const URI = "mongodb://127.0.0.1:27017";
-const dbName = "TwitterVisual";
-const client = new MongoClient(URI);
+const URI = "mongodb+srv://osama:Osamah786@cluster0-ozijn.mongodb.net/TwitterVisualTool?retryWrites=true&w=majority";
+const dbName = "TwitterVisualTool";
+const client = new MongoClient(URI,{useUnifiedTopology:true});
 
 let dataToSend = Array<frontEndResponse>();
 
@@ -43,7 +43,8 @@ function serve() {
         res.send("Specific City based Search under construction");
     });
     app.get('/debug',(req,res)=>{
-
+        console.log(req);
+        res.send("Request received");
     })
     app.listen(8080, () => console.log('\nListening on http://localhost:8080'));
 }
